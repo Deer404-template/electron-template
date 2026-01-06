@@ -1,0 +1,56 @@
+{
+  "name": "electron-forge-template",
+  "productName": "electron-forge-template",
+  "version": "1.0.0",
+  "description": "Electron + Vite + TypeScript 桌面应用模板，内置 SQLite 与 Zustand 示例",
+  "main": ".vite/build/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint --ext .ts,.tsx ."
+  },
+  "keywords": [],
+  "author": {
+    "name": "Deer404",
+    "email": "919187569@qq.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@tanstack/react-router": "^1.87.10",
+    "@tanstack/router-devtools": "^1.87.10",
+    "better-sqlite3": "^12.5.0",
+    "electron-squirrel-startup": "^1.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.9"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.10.2",
+    "@electron-forge/maker-deb": "^7.10.2",
+    "@electron-forge/maker-rpm": "^7.10.2",
+    "@electron-forge/maker-squirrel": "^7.10.2",
+    "@electron-forge/maker-zip": "^7.10.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
+    "@electron-forge/plugin-fuses": "^7.10.2",
+    "@electron-forge/plugin-vite": "^7.10.2",
+    "@electron/fuses": "^1.8.0",
+    "@tanstack/router-vite-plugin": "^1.87.10",
+    "@types/electron-squirrel-startup": "^1.0.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "asar": "^3.2.0",
+    "autoprefixer": "^10.4.20",
+    "electron": "39.2.7",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "^2.32.0",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.21"
+  }
+}

@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: #0b1220;
+  background-color: #070910;
+  line-height: 1.6;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(120% 120% at 20% 20%, rgba(86, 132, 255, 0.12), transparent 40%),
+    radial-gradient(80% 80% at 80% 10%, rgba(181, 111, 255, 0.18), transparent 35%),
+    #070910;
+  color: #dfe7ff;
+}
+
+#root {
+  min-height: 100vh;
+  padding: 32px 24px 48px;
+  box-sizing: border-box;
+}
+
+.welcome-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.hero {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(20, 28, 46, 0.9), rgba(18, 21, 36, 0.9));
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #8aa4ff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(28px, 3vw, 36px);
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  margin: 0 0 16px;
+  color: #c2c8d6;
+  max-width: 720px;
+}
+
+.cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primary-btn,
+.secondary-btn {
+  border-radius: 12px;
+  padding: 12px 16px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(120deg, #7b9dff, #5a7bff);
+  color: #0b1220;
+  box-shadow: 0 15px 40px rgba(90, 123, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #dfe7ff;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+  transform: translateY(-1px);
+}
+
+.panel {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(16, 21, 35, 0.78);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.panel h2 {
+  margin: 4px 0 0;
+  letter-spacing: -0.01em;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(122, 156, 255, 0.14);
+  color: #c7d5ff;
+  font-weight: 600;
+  border: 1px solid rgba(122, 156, 255, 0.3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.card-title {
+  margin: 0 0 6px;
+  color: #9fb2ff;
+  font-weight: 600;
+}
+
+.card-body {
+  margin: 0;
+  font-size: 15px;
+}
+
+.card-foot {
+  margin: 8px 0 0;
+  color: #7f8aa8;
+  font-size: 12px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #dfe7ff;
+  outline: none;
+  font-weight: 600;
+}
+
+.input:focus {
+  border-color: #7b9dff;
+  box-shadow: 0 0 0 3px rgba(123, 157, 255, 0.25);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.feature-card {
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.feature-title {
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.feature-desc {
+  margin: 0;
+  color: #c2c8d6;
+}
+
+.tone-core {
+  border-color: rgba(123, 157, 255, 0.35);
+}
+
+.tone-stack {
+  border-color: rgba(123, 255, 215, 0.25);
+}
+
+.tone-ops {
+  border-color: rgba(255, 197, 123, 0.25);
+}
+
+@media (max-width: 768px) {
+  #root {
+    padding: 20px 16px 32px;
+  }
+
+  .hero,
+  .panel {
+    padding: 18px;
+  }
+}
