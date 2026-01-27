@@ -2,6 +2,11 @@ import { createRoot } from 'react-dom/client';
 import { createHashHistory, createRouter, RouterProvider } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 
+const platform = window.appBridge?.platform;
+if (platform) {
+  document.documentElement.classList.add(`platform-${platform}`);
+}
+
 const router = createRouter({
   routeTree,
   history: window.location.protocol === 'file:' ? createHashHistory() : undefined,

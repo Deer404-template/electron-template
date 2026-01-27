@@ -30,12 +30,29 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,
+    backgroundColor: '#070910',
+    show: false,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },
   });
+
+  const sendMaximizedChanged = () => {
+    // frameless window 下，最大化状态可能通过双击拖拽区/快捷键等方式变化，这里统一推送给渲染层同步 UI。
+    mainWindow.webContents.send(
+      'window:maximized-changed',
+      mainWindow.isMaximized() || mainWindow.isFullScreen(),
+    );
+  };
+
+  mainWindow.on('maximize', sendMaximizedChanged);
+  mainWindow.on('unmaximize', sendMaximizedChanged);
+  mainWindow.on('enter-full-screen', sendMaximizedChanged);
+  mainWindow.on('leave-full-screen', sendMaximizedChanged);
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -50,6 +67,12 @@ const createWindow = () => {
   if (import.meta.env.DEV) {
     mainWindow.webContents.openDevTools();
   }
+
+  // 避免首屏白屏闪烁（先加载渲染进程资源，再显示窗口）。
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+    sendMaximizedChanged();
+  });
 };
 
 // This method will be called when Electron has finished
@@ -90,6 +113,41 @@ ipcMain.handle('config:set', (_event, payload: { key: string; value: string }) =
   ).run({ key: payload.key, value: payload.value, updatedAt });
 
   return { key: payload.key, value: payload.value, updatedAt };
+});
+
+ipcMain.handle('window:minimize', (event) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  win?.minimize();
+});
+
+ipcMain.handle('window:toggle-maximize', (event) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (!win) return false;
+
+  // macOS 上“绿色”按钮更接近“全屏”语义；其他平台使用最大化/还原。
+  if (process.platform === 'darwin') {
+    const next = !win.isFullScreen();
+    win.setFullScreen(next);
+    return next;
+  }
+
+  if (win.isMaximized()) {
+    win.unmaximize();
+    return false;
+  }
+
+  win.maximize();
+  return true;
+});
+
+ipcMain.handle('window:is-maximized', (event) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  return (win?.isMaximized() ?? false) || (win?.isFullScreen() ?? false);
+});
+
+ipcMain.handle('window:close', (event) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  win?.close();
 });
 
 // In this file you can include the rest of your app's specific main process
