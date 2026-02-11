@@ -13,9 +13,13 @@ const appBridge: AppBridge = {
     return ipcRenderer.invoke('config:set', { key, value });
   },
   onWindowMaximizedChanged(listener) {
-    ipcRenderer.on('window:maximized-changed', (_event, value) => {
+    const handler = (_event: Electron.IpcRendererEvent, value: unknown) => {
       listener(Boolean(value));
-    });
+    };
+    ipcRenderer.on('window:maximized-changed', handler);
+    return () => {
+      ipcRenderer.off('window:maximized-changed', handler);
+    };
   },
   async windowMinimize(): Promise<void> {
     await ipcRenderer.invoke('window:minimize');

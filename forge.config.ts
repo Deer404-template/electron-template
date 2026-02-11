@@ -8,6 +8,7 @@ import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
 import path from 'node:path';
 import * as fs from 'node:fs/promises';
+import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-natives';
 import { rebuild } from '@electron/rebuild';
 
 const getElectronVersion = async () => {
@@ -28,6 +29,31 @@ const getElectronVersion = async () => {
   return version;
 };
 
+const prepareExtraResources = async () => {
+  const extraResourcesRoot = path.join(
+    process.cwd(),
+    '.forge-extra-resources',
+  );
+  const extraNodeModules = path.join(extraResourcesRoot, 'node_modules');
+  const modulesToCopy = ['better-sqlite3', 'bindings', 'file-uri-to-path'];
+
+  await fs.rm(extraResourcesRoot, { recursive: true, force: true });
+  await fs.mkdir(extraNodeModules, { recursive: true });
+
+  await Promise.all(
+    modulesToCopy.map(async (moduleName) => {
+      const fromPath = path.join(
+        process.cwd(),
+        'node_modules',
+        moduleName,
+      );
+      const toPath = path.join(extraNodeModules, moduleName);
+
+      await fs.cp(fromPath, toPath, { recursive: true });
+    }),
+  );
+};
+
 const config: ForgeConfig = {
   hooks: {
     prePackage: async (_forgeConfig, _platform, arch) => {
@@ -39,43 +65,18 @@ const config: ForgeConfig = {
         force: true,
         onlyModules: ['better-sqlite3'],
       });
+
+      await prepareExtraResources();
     },
   },
   packagerConfig: {
     // 原生模块需要解压到 asar 外
     asar: {
-      unpack: '{**/node_modules/better-sqlite3/**,**/*.node}',
+      unpack: '{**/*.node}',
     },
-    extraResource: ['node_modules/better-sqlite3'],
-    afterCopyExtraResources: [
-      (buildPath, _electronVersion, platform, _arch, callback) => {
-        (async () => {
-          if (platform !== 'darwin') return;
-
-          const appNames = await fs.readdir(buildPath);
-          const appName = appNames.find((name) => name.endsWith('.app'));
-          if (!appName) return;
-
-          const resourcesPath = path.join(buildPath, appName, 'Contents', 'Resources');
-          const nodeModulesPath = path.join(resourcesPath, 'node_modules');
-          await fs.mkdir(nodeModulesPath, { recursive: true });
-
-          const runtimeDeps = ['bindings', 'file-uri-to-path'];
-          for (const depName of runtimeDeps) {
-            const srcPath = path.join(process.cwd(), 'node_modules', depName);
-            const destPath = path.join(nodeModulesPath, depName);
-            await fs.rm(destPath, { recursive: true, force: true });
-            await fs.cp(srcPath, destPath, { recursive: true });
-          }
-        })()
-          .then(() => callback())
-          .catch((err) => callback(err as Error));
-      },
+    extraResource: [
+      path.join(process.cwd(), '.forge-extra-resources', 'node_modules'),
     ],
-    // 使用更快的镜像源，避免下载 Electron 二进制时超时
-    electronDownload: {
-      mirror: 'https://npmmirror.com/mirrors/electron/',
-    },
   },
   rebuildConfig: {
     onlyModules: ['better-sqlite3'],
@@ -87,6 +88,7 @@ const config: ForgeConfig = {
     new MakerDeb({}),
   ],
   plugins: [
+    new AutoUnpackNativesPlugin({}),
     new VitePlugin({
       build: [
         {

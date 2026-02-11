@@ -1,12 +1,18 @@
 import { Link, Outlet, createRootRoute, useRouterState } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { useAppStore } from '../stores/appStore';
 import '../index.css';
 
 export const Route = createRootRoute({
   component: Root,
 });
+
+const RouterDevtools = import.meta.env.DEV
+  ? lazy(async () => {
+      const mod = await import('@tanstack/router-devtools');
+      return { default: mod.TanStackRouterDevtools };
+    })
+  : null;
 
 type NavKey = 'overview' | 'config' | 'features';
 
@@ -208,9 +214,12 @@ function Root() {
 
   useEffect(() => {
     if (!window.appBridge?.onWindowMaximizedChanged) return;
-    window.appBridge.onWindowMaximizedChanged((value) => {
+    const unsubscribe = window.appBridge.onWindowMaximizedChanged((value) => {
       setIsMaximized(value);
     });
+    return () => {
+      unsubscribe?.();
+    };
   }, []);
 
   const handleMinimize = async () => {
@@ -368,7 +377,11 @@ function Root() {
         </p>
       </footer>
 
-      {import.meta.env.DEV ? <TanStackRouterDevtools position="bottom-right" /> : null}
+      {import.meta.env.DEV && RouterDevtools ? (
+        <Suspense fallback={null}>
+          <RouterDevtools position="bottom-right" />
+        </Suspense>
+      ) : null}
     </div>
   );
 }

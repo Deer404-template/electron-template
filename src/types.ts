@@ -9,7 +9,7 @@ export interface AppBridge {
   ping: () => Promise<string>;
   getConfig: (key: string) => Promise<ConfigEntry | null>;
   setConfig: (key: string, value: string) => Promise<ConfigEntry>;
-  onWindowMaximizedChanged: (listener: (isMaximized: boolean) => void) => void;
+  onWindowMaximizedChanged: (listener: (isMaximized: boolean) => void) => (() => void) | void;
   windowMinimize: () => Promise<void>;
   windowToggleMaximize: () => Promise<boolean>;
   windowIsMaximized: () => Promise<boolean>;
