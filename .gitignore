@@ -89,6 +89,9 @@ typings/
 .vite/
 dist/
 
+# Temp
+.tmp/
+
 # Electron-Forge
 out/
 
